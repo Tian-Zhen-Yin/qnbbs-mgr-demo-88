@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kgc.bbs.mapper.BbsDetailMapper">
+
+    <!--  List<BbsDetail> selectAllBbsDetail(Integer sortId);  -->
+    <select id="selectAllBbsDetail" resultType="com.kgc.bbs.beans.BbsDetail">
+        select id, sort_id, title, detail, author, create_date, reply_count
+        from bbs_detail
+        <where>
+            <if test="_parameter != null and _parameter != 0">
+                sort_id = #{_parameter}
+            </if>
+        </where>
+        order by create_date desc;
+    </select>
+    
+    <!--  int insertBbsDetail(BbsDetail bbsDetail);  -->
+    <insert id="insertBbsDetail">
+        insert into bbs_detail(sort_id,title,detail,author,create_date, reply_count)
+        values
+        (#{sortId}, #{title}, #{detail}, #{author}, now(), 1);
+    </insert>
+
+    <!--  BbsDetail selectBbsDetailById(Integer id);  -->
+    <select id="selectBbsDetailById" resultType="com.kgc.bbs.beans.BbsDetail">
+        select id, sort_id, title, detail, author, create_date, reply_count
+        from bbs_detail
+        where id = #{id}
+    </select>
+
+    <!--  int updateBbsDetail(BbsDetail bbsDetail);  -->
+    <update id="updateBbsDetail">
+        update bbs_detail
+        <set>
+            <if test="sortId != null">sort_id = #{sortId},</if>
+            <if test="author != null">author = #{author},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="replyCount != null">reply_count = #{replyCount},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--  int deleteBbsDetail(Integer id);  -->
+    <delete id="deleteBbsDetail">
+        delete from bbs_detail where id = #{id}
+    </delete>
+
+    <!--   int selectBbsDetailCount(BbsForm bbsForm);  -->
+    <select id="selectBbsDetailCount" resultType="int">
+        select count(1) from bbs_detail
+        <where>
+            <if test="sortId != 0">
+                and sort_id = #{sortId}
+            </if>
+            <if test="title != null">
+                and title like concat('%', #{title}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!--   List<BbsDetail> selectBbsDetailUsePage(BbsForm bbsForm);  -->
+    <select id="selectBbsDetailUsePage" resultType="com.kgc.bbs.beans.BbsDetail">
+        <bind name="pageIndex" value="(pageNo - 1) * pageSize"/>
+        select id, sort_id, title, detail, author, create_date, reply_count from bbs_detail
+        <where>
+            <if test="sortId != 0">
+                and sort_id = #{sortId}
+            </if>
+            <if test="title != null">
+                and title like concat('%', #{title}, '%')
+            </if>
+        </where>
+        order by create_date desc
+        limit #{pageIndex}, #{pageSize}
+    </select>
+</mapper>

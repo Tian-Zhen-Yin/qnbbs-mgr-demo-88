@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kgc.bbs.mapper.BbsSortMapper">
+    <!--  List<BbsSort> selectAllBbsSort();  -->
+    <select id="selectAllBbsSort" resultType="com.kgc.bbs.beans.BbsSort">
+        select `id`, `name` from bbs_sort;
+    </select>
+</mapper>
